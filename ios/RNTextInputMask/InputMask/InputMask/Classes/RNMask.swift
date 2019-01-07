@@ -9,7 +9,7 @@
 import Foundation
 
 open class RNMask : NSObject {
-    public static func maskValue(text: String, format: String) -> String {
+    public static func maskValue(text: String, format: String, autoComplete: Bool = true) -> String {
         let mask : Mask = try! Mask.getOrCreate(withFormat: format)
 
         let result: Mask.Result = mask.apply(
@@ -17,13 +17,13 @@ open class RNMask : NSObject {
                 string: text,
                 caretPosition: text.endIndex
             ),
-            autocomplete: true
+            autocomplete: autoComplete
         )
 
         return result.formattedText.string
     }
     
-    public static func unmaskValue(text: String, format: String) -> String {
+    public static func unmaskValue(text: String, format: String, autoComplete: Bool = true) -> String {
         let mask : Mask = try! Mask.getOrCreate(withFormat: format)
 
         let result: Mask.Result = mask.apply(
@@ -31,7 +31,7 @@ open class RNMask : NSObject {
                 string: text,
                 caretPosition: text.endIndex
             ),
-            autocomplete: true
+            autocomplete: autoComplete
         )
 
         return result.extractedValue

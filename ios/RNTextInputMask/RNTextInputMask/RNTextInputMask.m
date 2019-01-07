@@ -28,13 +28,13 @@ RCT_EXPORT_MODULE();
     return self.bridge.uiManager.methodQueue;
 }
 
-RCT_EXPORT_METHOD(mask:(NSString *)maskString inputValue:(NSString *)inputValue onResult:(RCTResponseSenderBlock)onResult) {
-    NSString *output = [RNMask maskValueWithText:inputValue format:maskString];
+RCT_EXPORT_METHOD(mask:(NSString *)maskString inputValue:(NSString *)inputValue autoComplete: (BOOL)autoComplete onResult:(RCTResponseSenderBlock)onResult) {
+    NSString *output = [RNMask maskValueWithText:inputValue format:maskString autoComplete:autoComplete];
     onResult(@[output]);
 }
 
-RCT_EXPORT_METHOD(unmask:(NSString *)maskString inputValue:(NSString *)inputValue onResult:(RCTResponseSenderBlock)onResult) {
-    NSString *output = [RNMask unmaskValueWithText:inputValue format:maskString];
+RCT_EXPORT_METHOD(unmask:(NSString *)maskString inputValue:(NSString *)inputValue autoComplete: (BOOL)autoComplete onResult:(RCTResponseSenderBlock)onResult) {
+    NSString *output = [RNMask unmaskValueWithText:inputValue format:maskString autoComplete:autoComplete];
     onResult(@[output]);
 }
 

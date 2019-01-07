@@ -15,6 +15,7 @@ export { mask, unmask, setMask }
 export default class TextInputMask extends Component {
   static defaultProps = {
     maskDefaultValue: true,
+    autoComplete: true,
   }
 
   masked = false
@@ -23,8 +24,11 @@ export default class TextInputMask extends Component {
     if (this.props.maskDefaultValue &&
         this.props.mask &&
         this.props.value) {
-      mask(this.props.mask, '' + this.props.value, text =>
-        this.input && this.input.setNativeProps({ text }),
+      mask(
+        this.props.mask,
+        '' + this.props.value,
+        this.props.autoComplete,
+        text => this.input && this.input.setNativeProps({ text }),
       )
     }
 
@@ -36,8 +40,11 @@ export default class TextInputMask extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.mask && (this.props.value !== nextProps.value)) {
-      mask(this.props.mask, '' + nextProps.value, text =>
-      this.input && this.input.setNativeProps({ text })
+      mask(
+        this.props.mask,
+        '' + nextProps.value,
+        nextProps.autoComplete,
+        text => this.input && this.input.setNativeProps({ text }),
       );
     }
 
@@ -59,9 +66,14 @@ export default class TextInputMask extends Component {
       multiline={this.props.mask && Platform.OS === 'ios' ? false : this.props.multiline}
       onChangeText={masked => {
         if (this.props.mask) {
-          const _unmasked = unmask(this.props.mask, masked, unmasked => {
-            this.props.onChangeText && this.props.onChangeText(masked, unmasked)
-          })
+          const _unmasked = unmask(
+            this.props.mask,
+            masked,
+            this.props.autoComplete,
+            unmasked => {
+              this.props.onChangeText && this.props.onChangeText(masked, unmasked)
+            },
+          )
         } else {
           this.props.onChangeText && this.props.onChangeText(masked)
         }

@@ -35,6 +35,7 @@ public class RNTextInputMaskModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void mask(final String maskString,
                      final String inputValue,
+                     final boolean autoComplete,
                      final Callback onResult) {
       final Mask mask = new Mask(maskString);
       final String input = inputValue;
@@ -43,7 +44,7 @@ public class RNTextInputMaskModule extends ReactContextBaseJavaModule {
               input,
               input.length()
           ),
-          true
+          autoComplete
       );
       final String output = result.getFormattedText().getString();
       onResult.invoke(output);
@@ -52,6 +53,7 @@ public class RNTextInputMaskModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void unmask(final String maskString,
                      final String inputValue,
+                     final boolean autoComplete,
                      final Callback onResult) {
       final Mask mask = new Mask(maskString);
       final String input = inputValue;
@@ -60,7 +62,7 @@ public class RNTextInputMaskModule extends ReactContextBaseJavaModule {
               input,
               input.length()
           ),
-          true
+          autoComplete
       );
       final String output = result.getExtractedValue();
       onResult.invoke(output);
