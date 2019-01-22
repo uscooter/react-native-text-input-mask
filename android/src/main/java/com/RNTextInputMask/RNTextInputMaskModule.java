@@ -13,7 +13,6 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.Callback;
 
 import com.redmadrobot.inputmask.MaskedTextChangedListener;
-import com.redmadrobot.inputmask.PolyMaskTextChangedListener;
 
 import com.redmadrobot.inputmask.model.CaretString;
 import com.redmadrobot.inputmask.helper.Mask;
@@ -69,7 +68,7 @@ public class RNTextInputMaskModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setMask(final int tag, final String mask) {
+    public void setMask(final int tag, final String mask, final boolean forceCapitals) {
         // We need to use prependUIBlock instead of addUIBlock since subsequent UI operations in
         // the queue might be removing the view we're looking to update.
         reactContext.getNativeModule(UIManagerModule.class).prependUIBlock(new UIBlock() {
@@ -88,7 +87,19 @@ public class RNTextInputMaskModule extends ReactContextBaseJavaModule {
                                 editText,
                                 null,
                                 null
-                        );
+                        ) {
+                          @Override
+                          public void onTextChanged(CharSequence text, int cursorPosition, int before, int count) {
+                              String rawText = text.toString();
+                              String finalText = forceCapitals ? rawText.toUpperCase() : rawText;
+
+                              if (rawText.equals(finalText)) {
+                                super.onTextChanged(finalText, cursorPosition, before, count);
+                              } else {
+                                editText.setText(finalText);
+                              }
+                          }
+                        };
 
                         if (editText.getTag() != null) {
                             editText.removeTextChangedListener((TextWatcher) editText.getTag());

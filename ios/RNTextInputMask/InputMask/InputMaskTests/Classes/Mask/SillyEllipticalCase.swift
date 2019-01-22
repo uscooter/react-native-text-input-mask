@@ -8,10 +8,10 @@ import XCTest
 @testable import InputMask
 
 
-class YearACCase: MaskTestCase {
+class SillyEllipticalCase: MaskTestCase {
     
     override func format() -> String {
-        return "[9990] AC"
+        return "[0…][AAA]"
     }
     
     func testInit_correctFormat_maskInitialized() {
@@ -42,27 +42,93 @@ class YearACCase: MaskTestCase {
     
     func testGetPlaceholder_allSet_returnsCorrectPlaceholder() {
         let placeholder: String = try! self.mask().placeholder
-        XCTAssertEqual(placeholder, "0000 AC")
+        XCTAssertEqual(placeholder, "0")
     }
     
     func testAcceptableTextLength_allSet_returnsCorrectCount() {
         let acceptableTextLength: Int = try! self.mask().acceptableTextLength
-        XCTAssertEqual(acceptableTextLength, 4)
+        XCTAssertEqual(acceptableTextLength, 2)
     }
     
     func testTotalTextLength_allSet_returnsCorrectCount() {
         let totalTextLength: Int = try! self.mask().totalTextLength
-        XCTAssertEqual(totalTextLength, 7)
+        XCTAssertEqual(totalTextLength, 2)
     }
     
     func testAcceptableValueLength_allSet_returnsCorrectCount() {
         let acceptableValueLength: Int = try! self.mask().acceptableValueLength
-        XCTAssertEqual(acceptableValueLength, 1)
+        XCTAssertEqual(acceptableValueLength, 2)
     }
     
     func testTotalValueLength_allSet_returnsCorrectCount() {
         let totalValueLength: Int = try! self.mask().totalValueLength
-        XCTAssertEqual(totalValueLength, 4)
+        XCTAssertEqual(totalValueLength, 2)
+    }
+    
+    func testApply_J_returns_emptyString() {
+        let inputString: String         = "J"
+        let inputCaret:  String.Index   = inputString.endIndex
+        
+        let expectedString: String       = ""
+        let expectedCaret:  String.Index = expectedString.endIndex
+        let expectedValue:  String       = expectedString
+        
+        let result: Mask.Result = try! self.mask().apply(
+            toText: CaretString(
+                string: inputString,
+                caretPosition: inputCaret
+            )
+        )
+        
+        XCTAssertEqual(expectedString, result.formattedText.string)
+        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
+        XCTAssertEqual(expectedValue, result.extractedValue)
+        
+        XCTAssertEqual(false, result.complete)
+    }
+    
+    func testApply_Je_returns_emptyString() {
+        let inputString: String         = "Je"
+        let inputCaret:  String.Index   = inputString.endIndex
+        
+        let expectedString: String       = ""
+        let expectedCaret:  String.Index = expectedString.endIndex
+        let expectedValue:  String       = expectedString
+        
+        let result: Mask.Result = try! self.mask().apply(
+            toText: CaretString(
+                string: inputString,
+                caretPosition: inputCaret
+            )
+        )
+        
+        XCTAssertEqual(expectedString, result.formattedText.string)
+        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
+        XCTAssertEqual(expectedValue, result.extractedValue)
+        
+        XCTAssertEqual(false, result.complete)
+    }
+    
+    func testApply_Jeo_returns_emptyString() {
+        let inputString: String         = "Jeo"
+        let inputCaret:  String.Index   = inputString.endIndex
+        
+        let expectedString: String       = ""
+        let expectedCaret:  String.Index = expectedString.endIndex
+        let expectedValue:  String       = expectedString
+        
+        let result: Mask.Result = try! self.mask().apply(
+            toText: CaretString(
+                string: inputString,
+                caretPosition: inputCaret
+            )
+        )
+        
+        XCTAssertEqual(expectedString, result.formattedText.string)
+        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
+        XCTAssertEqual(expectedValue, result.extractedValue)
+        
+        XCTAssertEqual(false, result.complete)
     }
     
     func testApply_1_returns_1() {
@@ -84,82 +150,16 @@ class YearACCase: MaskTestCase {
         XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
         XCTAssertEqual(expectedValue, result.extractedValue)
         
-        XCTAssertEqual(false, result.complete)
+        XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_11_returns_11() {
-        let inputString: String         = "11"
+    func testApply_12_returns_12() {
+        let inputString: String         = "12"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "11"
+        let expectedString: String       = "12"
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_111_returns_111() {
-        let inputString: String         = "111"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "111"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_1111_returns_1111() {
-        let inputString: String         = "1111"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "1111"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_11112_returns_1111spaceAC() {
-        let inputString: String         = "11112"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "1111 AC"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = "1111"
         
         let result: Mask.Result = try! self.mask().apply(
             toText: CaretString(
@@ -175,20 +175,85 @@ class YearACCase: MaskTestCase {
         XCTAssertEqual(true, result.complete)
     }
     
-    func testApplyAutocomplete_1111_returns_1111spaceAC() {
-        let inputString: String         = "1111"
+    func testApply_123_returns_123() {
+        let inputString: String         = "123"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "1111 AC"
+        let expectedString: String       = "123"
         let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = "1111"
+        let expectedValue:  String       = expectedString
         
         let result: Mask.Result = try! self.mask().apply(
             toText: CaretString(
                 string: inputString,
                 caretPosition: inputCaret
-            ),
-            autocomplete: true
+            )
+        )
+        
+        XCTAssertEqual(expectedString, result.formattedText.string)
+        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
+        XCTAssertEqual(expectedValue, result.extractedValue)
+        
+        XCTAssertEqual(true, result.complete)
+    }
+    
+    func testApply_1Jeorge2_returns_12() {
+        let inputString: String         = "1Jeorge2"
+        let inputCaret:  String.Index   = inputString.endIndex
+        
+        let expectedString: String       = "12"
+        let expectedCaret:  String.Index = expectedString.endIndex
+        let expectedValue:  String       = expectedString
+        
+        let result: Mask.Result = try! self.mask().apply(
+            toText: CaretString(
+                string: inputString,
+                caretPosition: inputCaret
+            )
+        )
+        
+        XCTAssertEqual(expectedString, result.formattedText.string)
+        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
+        XCTAssertEqual(expectedValue, result.extractedValue)
+        
+        XCTAssertEqual(true, result.complete)
+    }
+    
+    func testApply_1Jeorge23_returns_123() {
+        let inputString: String         = "1Jeorge23"
+        let inputCaret:  String.Index   = inputString.endIndex
+        
+        let expectedString: String       = "123"
+        let expectedCaret:  String.Index = expectedString.endIndex
+        let expectedValue:  String       = expectedString
+        
+        let result: Mask.Result = try! self.mask().apply(
+            toText: CaretString(
+                string: inputString,
+                caretPosition: inputCaret
+            )
+        )
+        
+        XCTAssertEqual(expectedString, result.formattedText.string)
+        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
+        XCTAssertEqual(expectedValue, result.extractedValue)
+        
+        XCTAssertEqual(true, result.complete)
+    }
+    
+    func testApply_1234Jeorge56_returns_123456() {
+        let inputString: String         = "1234Jeorge56"
+        let inputCaret:  String.Index   = inputString.endIndex
+        
+        let expectedString: String       = "123456"
+        let expectedCaret:  String.Index = expectedString.endIndex
+        let expectedValue:  String       = expectedString
+        
+        let result: Mask.Result = try! self.mask().apply(
+            toText: CaretString(
+                string: inputString,
+                caretPosition: inputCaret
+            )
         )
         
         XCTAssertEqual(expectedString, result.formattedText.string)

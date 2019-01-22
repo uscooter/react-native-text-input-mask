@@ -13,6 +13,7 @@
 #import "RCTSinglelineTextInputView.h"
 #import "RCTUITextField.h"
 #import "RNTextInputMask.h"
+#import "RNTextInputMask-Swift.h"
 
 @import InputMask;
 
@@ -38,7 +39,7 @@ RCT_EXPORT_METHOD(unmask:(NSString *)maskString inputValue:(NSString *)inputValu
     onResult(@[output]);
 }
 
-RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask) {
+RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask forceCapitals:(BOOL) forceCapitals) {
     [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, RCTSinglelineTextInputView *> *viewRegistry ) {
         dispatch_async(dispatch_get_main_queue(), ^{
             RCTSinglelineTextInputView *view = viewRegistry[reactNode];
@@ -49,12 +50,28 @@ RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask) {
             }
             
             NSString *key = [NSString stringWithFormat:@"%@", reactNode];
-            MaskedTextFieldDelegate* maskedDelegate = [[MaskedTextFieldDelegate alloc] initWithFormat:mask];
+            MaskedTextFieldDelegate* maskedDelegate;
+            if (forceCapitals) {
+                maskedDelegate = [[ForceCapitalsMaskedTextFieldDelegate alloc] init];
+            } else {
+                maskedDelegate = [[MaskedTextFieldDelegate alloc] init];
+            }
+            [maskedDelegate setPrimaryMaskFormat: mask];
             masks[key] = maskedDelegate;
             [masks[key] setListener:self];
             textView.delegate = masks[key];
             
             [self updateTextField:maskedDelegate textView:textView];
+        });
+    }];
+}
+
+RCT_EXPORT_METHOD(setText:(nonnull NSNumber *)reactNode text:(NSString *)text){
+    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, RCTSinglelineTextInputView *> *viewRegistry ) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            RCTSinglelineTextInputView *view = viewRegistry[reactNode];
+            UIView<RCTBackedTextInputViewProtocol>  *textView = [view backedTextInputView];
+            [textView setAttributedText:[[NSAttributedString alloc] initWithString:text]];
         });
     }];
 }

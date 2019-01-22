@@ -8,10 +8,19 @@ import XCTest
 @testable import InputMask
 
 
-class MonthYearCase: MaskTestCase {
+class DecimalNumberCase: MaskTestCase {
     
     override func format() -> String {
-        return "[00]{/}[0000]"
+        return "[9999][.][99]"
+    }
+    
+    override func mask() throws -> Mask {
+        return try Mask(
+            format: self.format(),
+            customNotations: [
+                Notation(character: ".", characterSet: CharacterSet(charactersIn: "."), isOptional: true),
+            ]
+        )
     }
     
     func testInit_correctFormat_maskInitialized() {
@@ -34,7 +43,12 @@ class MonthYearCase: MaskTestCase {
             var masks: [Mask] = []
             for _ in 1...1000 {
                 masks.append(
-                    try! Mask.getOrCreate(withFormat: self.format())
+                    try! Mask.getOrCreate(
+                        withFormat: self.format(),
+                        customNotations: [
+                            Notation(character: ".", characterSet: CharacterSet(charactersIn: "."), isOptional: true),
+                        ]
+                    )
                 )
             }
         }
@@ -42,12 +56,12 @@ class MonthYearCase: MaskTestCase {
     
     func testGetPlaceholder_allSet_returnsCorrectPlaceholder() {
         let placeholder: String = try! self.mask().placeholder
-        XCTAssertEqual(placeholder, "00/0000")
+        XCTAssertEqual(placeholder, "0000.00")
     }
     
     func testAcceptableTextLength_allSet_returnsCorrectCount() {
         let acceptableTextLength: Int = try! self.mask().acceptableTextLength
-        XCTAssertEqual(acceptableTextLength, 7)
+        XCTAssertEqual(acceptableTextLength, 0)
     }
     
     func testTotalTextLength_allSet_returnsCorrectCount() {
@@ -57,7 +71,7 @@ class MonthYearCase: MaskTestCase {
     
     func testAcceptableValueLength_allSet_returnsCorrectCount() {
         let acceptableValueLength: Int = try! self.mask().acceptableValueLength
-        XCTAssertEqual(acceptableValueLength, 7)
+        XCTAssertEqual(acceptableValueLength, 0)
     }
     
     func testTotalValueLength_allSet_returnsCorrectCount() {
@@ -84,7 +98,29 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
         XCTAssertEqual(expectedValue, result.extractedValue)
         
-        XCTAssertEqual(false, result.complete)
+        XCTAssertEqual(true, result.complete)
+    }
+    
+    func testApply_1dot_returns_1dot() {
+        let inputString: String         = "1."
+        let inputCaret:  String.Index   = inputString.endIndex
+        
+        let expectedString: String       = "1."
+        let expectedCaret:  String.Index = expectedString.endIndex
+        let expectedValue:  String       = expectedString
+        
+        let result: Mask.Result = try! self.mask().apply(
+            toText: CaretString(
+                string: inputString,
+                caretPosition: inputCaret
+            )
+        )
+        
+        XCTAssertEqual(expectedString, result.formattedText.string)
+        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
+        XCTAssertEqual(expectedValue, result.extractedValue)
+        
+        XCTAssertEqual(true, result.complete)
     }
     
     func testApply_11_returns_11() {
@@ -106,58 +142,14 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
         XCTAssertEqual(expectedValue, result.extractedValue)
         
-        XCTAssertEqual(false, result.complete)
+        XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_111_returns_11slash1() {
-        let inputString: String         = "111"
+    func testApply_11dot_returns_11dot() {
+        let inputString: String         = "11."
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "11/1"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_1111_returns_11slash11() {
-        let inputString: String         = "1111"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "11/11"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_123456_returns_12slash3456() {
-        let inputString: String         = "123456"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "12/3456"
+        let expectedString: String       = "11."
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -175,77 +167,11 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_12slash3_returns_12slash3() {
-        let inputString: String         = "12/3"
+    func testApply_1dot1_returns_1dot1() {
+        let inputString: String         = "1.1"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "12/3"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_12slash34_returns_12slash34() {
-        let inputString: String         = "12/34"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "12/34"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_12slash345_returns_12slash345() {
-        let inputString: String         = "12/345"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "12/345"
-        let expectedCaret:  String.Index = expectedString.endIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_12slash3456_returns_12slash3456() {
-        let inputString: String         = "12/3456"
-        let inputCaret:  String.Index   = inputString.endIndex
-        
-        let expectedString: String       = "12/3456"
+        let expectedString: String       = "1.1"
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -263,11 +189,11 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_1234567_returns_12slash3456() {
-        let inputString: String         = "1234567"
+    func testApply_112_returns_112() {
+        let inputString: String         = "112"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "12/3456"
+        let expectedString: String       = "112"
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -285,11 +211,11 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_12345678_returns_12slash3456() {
-        let inputString: String         = "12345678"
+    func testApply_11dot2_returns_11dot2() {
+        let inputString: String         = "11.2"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "12/3456"
+        let expectedString: String       = "11.2"
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -307,55 +233,11 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_1111_StartIndex_returns_11slash11_StartIndex() {
-        let inputString: String         = "1111"
-        let inputCaret:  String.Index   = inputString.startIndex
-        
-        let expectedString: String       = "11/11"
-        let expectedCaret:  String.Index = expectedString.startIndex
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-    
-    func testApply_1111_ThirdIndex_returns_11slash11_FourthIndex() {
-        let inputString: String         = "1111"
-        let inputCaret:  String.Index   = inputString.index(inputString.startIndex, offsetBy: 2)
-        
-        let expectedString: String       = "11/11"
-        let expectedCaret:  String.Index = expectedString.index(expectedString.startIndex, offsetBy: 3)
-        let expectedValue:  String       = expectedString
-        
-        let result: Mask.Result = try! self.mask().apply(
-            toText: CaretString(
-                string: inputString,
-                caretPosition: inputCaret
-            )
-        )
-        
-        XCTAssertEqual(expectedString, result.formattedText.string)
-        XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
-        XCTAssertEqual(expectedValue, result.extractedValue)
-        
-        XCTAssertEqual(false, result.complete)
-    }
-
-    func testApply_abc1111_returns_11slash11() {
-        let inputString: String         = "abc1111"
+    func testApply_1122_returns_1122() {
+        let inputString: String         = "1122"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "11/11"
+        let expectedString: String       = "1122"
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -370,14 +252,14 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
         XCTAssertEqual(expectedValue, result.extractedValue)
         
-        XCTAssertEqual(false, result.complete)
+        XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_abc1de111_returns_11slash11() {
-        let inputString: String         = "abc1de111"
+    func testApply_1122dot_returns_1122dot() {
+        let inputString: String         = "1122."
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "11/11"
+        let expectedString: String       = "1122."
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -392,14 +274,14 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
         XCTAssertEqual(expectedValue, result.extractedValue)
         
-        XCTAssertEqual(false, result.complete)
+        XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_abc1de1fg11_returns_11slash11() {
-        let inputString: String         = "abc1de1fg11"
+    func testApply_1122dot33_returns_1122dot33() {
+        let inputString: String         = "1122.33"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = "11/11"
+        let expectedString: String       = "1122.33"
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -414,14 +296,14 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
         XCTAssertEqual(expectedValue, result.extractedValue)
         
-        XCTAssertEqual(false, result.complete)
+        XCTAssertEqual(true, result.complete)
     }
     
-    func testApply_a_returns_empty() {
-        let inputString: String         = "a"
+    func testApply_1122comma33_returns_1122() {
+        let inputString: String         = "1122,33"
         let inputCaret:  String.Index   = inputString.endIndex
         
-        let expectedString: String       = ""
+        let expectedString: String       = "1122"
         let expectedCaret:  String.Index = expectedString.endIndex
         let expectedValue:  String       = expectedString
         
@@ -436,7 +318,7 @@ class MonthYearCase: MaskTestCase {
         XCTAssertEqual(expectedCaret, result.formattedText.caretPosition)
         XCTAssertEqual(expectedValue, result.extractedValue)
         
-        XCTAssertEqual(false, result.complete)
+        XCTAssertEqual(true, result.complete)
     }
     
 }

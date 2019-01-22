@@ -10,12 +10,14 @@ import {
 const mask = NativeModules.RNTextInputMask.mask
 const unmask = NativeModules.RNTextInputMask.unmask
 const setMask = NativeModules.RNTextInputMask.setMask
+const setText = NativeModules.RNTextInputMask.setText
 export { mask, unmask, setMask }
 
 export default class TextInputMask extends Component {
   static defaultProps = {
     maskDefaultValue: true,
     autoComplete: true,
+    forceCapitals: false,
   }
 
   masked = false
@@ -26,7 +28,7 @@ export default class TextInputMask extends Component {
         this.props.value) {
       mask(
         this.props.mask,
-        '' + this.props.value,
+        '' + (this.props.forceCapitals ? this.props.value.toUpperCase() : this.props.value),
         this.props.autoComplete,
         text => this.input && this.input.setNativeProps({ text }),
       )
@@ -34,22 +36,43 @@ export default class TextInputMask extends Component {
 
     if (this.props.mask && !this.masked) {
       this.masked = true
-      setMask(findNodeHandle(this.input), this.props.mask)
+      setMask(findNodeHandle(this.input), this.props.mask, this.props.forceCapitals)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.mask && (this.props.value !== nextProps.value)) {
-      mask(
-        this.props.mask,
-        '' + nextProps.value,
-        nextProps.autoComplete,
-        text => this.input && this.input.setNativeProps({ text }),
-      );
+      if (nextProps.value) {
+        const lastValue = this.props.value;
+        mask(
+          this.props.mask,
+          '' + (this.props.forceCapitals ? nextProps.value.toUpperCase() : nextProps.value),
+          nextProps.autoComplete,
+          (text) => {
+            if (text !== lastValue) {
+              this.input && this.input.setNativeProps({ text });
+            }
+          },
+        );
+      } else {
+        this.input.setNativeProps({ text: nextProps.value })
+      }
     }
 
-    if (this.props.mask !== nextProps.mask) {
-      setMask(findNodeHandle(this.input), nextProps.mask)
+    if (this.props.mask !== nextProps.mask || this.props.forceCapitals !== nextProps.forceCapitals) {
+      setMask(findNodeHandle(this.input), nextProps.mask, nextProps.forceCapitals)
+    }
+  }
+
+  setText(text) {
+    let textToSet = text || '';
+    if (this.props.forceCapitals) {
+      textToSet = textToSet.toUpperCase();
+    }
+    if (Platform.OS === 'ios') {
+      setText(findNodeHandle(this.input), textToSet);
+    } else {
+      this.input.setNativeProps({ text: textToSet });
     }
   }
 

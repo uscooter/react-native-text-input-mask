@@ -10,6 +10,7 @@
 		00037D451F30732D008B5389 /* InputMask.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0031887C1F2F2D1500755291 /* InputMask.framework */; };
 		00278A051F2F25CE0023E794 /* RNTextInputMask.m in Sources */ = {isa = PBXBuildFile; fileRef = 00278A041F2F25CE0023E794 /* RNTextInputMask.m */; };
 		00278A061F2F25CE0023E794 /* RNTextInputMask.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 00278A031F2F25CE0023E794 /* RNTextInputMask.h */; };
+		97DD231721F156EB008A7C55 /* ForcedCapitalsMaskedTextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DD231621F156EB008A7C55 /* ForcedCapitalsMaskedTextFieldDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +48,7 @@
 		00278A031F2F25CE0023E794 /* RNTextInputMask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RNTextInputMask.h; sourceTree = "<group>"; };
 		00278A041F2F25CE0023E794 /* RNTextInputMask.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNTextInputMask.m; sourceTree = "<group>"; };
 		003188761F2F2D1500755291 /* InputMask.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InputMask.xcodeproj; path = InputMask/InputMask.xcodeproj; sourceTree = "<group>"; };
+		97DD231621F156EB008A7C55 /* ForcedCapitalsMaskedTextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForcedCapitalsMaskedTextFieldDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +85,7 @@
 			children = (
 				00278A031F2F25CE0023E794 /* RNTextInputMask.h */,
 				00278A041F2F25CE0023E794 /* RNTextInputMask.m */,
+				97DD231621F156EB008A7C55 /* ForcedCapitalsMaskedTextFieldDelegate.swift */,
 			);
 			path = RNTextInputMask;
 			sourceTree = "<group>";
@@ -136,6 +139,7 @@
 					002789FF1F2F25CE0023E794 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = YRYY3MUZEK;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -186,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00278A051F2F25CE0023E794 /* RNTextInputMask.m in Sources */,
+				97DD231721F156EB008A7C55 /* ForcedCapitalsMaskedTextFieldDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,11 +291,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = YRYY3MUZEK;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../react-native/Libraries/Text/**";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -298,11 +307,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = YRYY3MUZEK;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../react-native/Libraries/Text/**";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
