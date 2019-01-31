@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		00FED3D91F34AE0400BDB60B /* RNMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FED3D81F34AE0400BDB60B /* RNMask.swift */; };
+		6FAC71F12202E60F0024ADF1 /* InputMask.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A808ECB1D5B0FEC00A75B9C /* InputMask.framework */; };
 		8A1E3C541D64807800589799 /* Mask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1E3C531D64807800589799 /* Mask.swift */; };
 		8A1E3C551D64809900589799 /* Mask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1E3C531D64807800589799 /* Mask.swift */; };
-		8A808ED61D5B0FEC00A75B9C /* InputMask.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A808ECB1D5B0FEC00A75B9C /* InputMask.framework */; };
 		8A808EFB1D5B110300A75B9C /* InputMask.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A808EFA1D5B110300A75B9C /* InputMask.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		97DD220D21EFD93E008A7C55 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DD220C21EFD93E008A7C55 /* StringTests.swift */; };
 		97DD221E21EFD956008A7C55 /* DayMonthYearShortCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DD220E21EFD955008A7C55 /* DayMonthYearShortCase.swift */; };
@@ -125,7 +125,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A808ED61D5B0FEC00A75B9C /* InputMask.framework in Frameworks */,
+				6FAC71F12202E60F0024ADF1 /* InputMask.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

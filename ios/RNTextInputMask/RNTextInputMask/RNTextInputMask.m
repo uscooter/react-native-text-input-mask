@@ -10,8 +10,8 @@
 #import <React/RCTConvert.h>
 #import <React/RCTUIManager.h>
 #import <React/RCTEventDispatcher.h>
-#import "RCTSinglelineTextInputView.h"
-#import "RCTUITextField.h"
+#import "RCTText/RCTSinglelineTextInputView.h"
+#import "RCTText/RCTUITextField.h"
 #import "RNTextInputMask.h"
 #import "RNTextInputMask-Swift.h"
 

@@ -42,21 +42,14 @@ export default class TextInputMask extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.mask && (this.props.value !== nextProps.value)) {
-      if (nextProps.value) {
-        const lastValue = this.props.value;
-        mask(
-          this.props.mask,
-          '' + (this.props.forceCapitals ? nextProps.value.toUpperCase() : nextProps.value),
-          nextProps.autoComplete,
-          (text) => {
-            if (text !== lastValue) {
-              this.input && this.input.setNativeProps({ text });
-            }
-          },
-        );
-      } else {
-        this.input.setNativeProps({ text: nextProps.value })
-      }
+      mask(
+        this.props.mask,
+        '' + (this.props.forceCapitals ? nextProps.value.toUpperCase() : nextProps.value),
+        nextProps.autoComplete,
+        (text) => {
+          this.input && this.input.setNativeProps({ text });
+        },
+      );
     }
 
     if (this.props.mask !== nextProps.mask || this.props.forceCapitals !== nextProps.forceCapitals) {
@@ -74,6 +67,17 @@ export default class TextInputMask extends Component {
     } else {
       this.input.setNativeProps({ text: textToSet });
     }
+  }
+
+  setValue(text) {
+    mask(
+      this.props.mask,
+      '' + (this.props.forceCapitals ? text.toUpperCase() : text),
+      this.props.autoComplete,
+      (text) => {
+        this.input && this.setText(text);
+      },
+    );
   }
 
   render() {
